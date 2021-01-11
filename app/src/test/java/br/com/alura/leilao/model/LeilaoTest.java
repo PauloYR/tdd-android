@@ -8,7 +8,6 @@ public class LeilaoTest {
 
     private Leilao console = new Leilao("Console");
     private Usuario paulo = new Usuario("Paulo");
-    private Usuario fran = new Usuario("Fran");
 
     //[Nome do método][Estado do teste][Resultado esperado]
     //[deve] [resultado esperado] [estado de teste]
@@ -33,7 +32,7 @@ public class LeilaoTest {
     @Test
     public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemCresente(){
         console.propoe(new Lance(paulo,100.0));
-        console.propoe(new Lance(fran,200.0));
+        console.propoe(new Lance(new Usuario("Fran"),200.0));
         console.propoe(new Lance(paulo,300.0));
 
         double maiorLanceCrescente = console.getMaiorLance();
@@ -45,7 +44,7 @@ public class LeilaoTest {
     public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecresente(){
         console.propoe(new Lance(paulo,300.0));
         console.propoe(new Lance(paulo,200.0));
-        console.propoe(new Lance(fran,100.0));
+        console.propoe(new Lance(new Usuario("Fran"),100.0));
 
         double maiorLanceDecrescente = console.getMaiorLance();
 
@@ -64,7 +63,7 @@ public class LeilaoTest {
     @Test
     public void deve_DevolveMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemCresente(){
         console.propoe(new Lance(paulo,100.0));
-        console.propoe(new Lance(fran,200.0));
+        console.propoe(new Lance(new Usuario("Fran"),200.0));
         console.propoe(new Lance(paulo,300.0));
 
         double menorLanceCrescente = console.getMenorLance();
@@ -74,7 +73,7 @@ public class LeilaoTest {
 
     @Test
     public void deve_DevolveMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecresente(){
-        console.propoe(new Lance(fran,300.0));
+        console.propoe(new Lance(new Usuario("Fran"),300.0));
         console.propoe(new Lance(paulo,200.0));
         console.propoe(new Lance(paulo,100.0));
 
