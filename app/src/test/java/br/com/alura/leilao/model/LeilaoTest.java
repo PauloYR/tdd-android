@@ -103,5 +103,4 @@ public class LeilaoTest {
         assertEquals(3,tresMaioresLances.size());
 
     }
-
 }
