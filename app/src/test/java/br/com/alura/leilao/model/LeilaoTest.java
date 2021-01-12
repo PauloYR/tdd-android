@@ -25,7 +25,6 @@ public class LeilaoTest {
     @Test
     public void deve_DevolveMaiorLance_QuandoRecebeApenasUmLance(){
         CONSOLE.propoe(new Lance(PAULO,200.0));
-        CONSOLE.propoe(new Lance(PAULO,100.0));
 
         double maiorLanceDevolvido = CONSOLE.getMaiorLance();
 
@@ -41,17 +40,6 @@ public class LeilaoTest {
         double maiorLanceCrescente = CONSOLE.getMaiorLance();
 
         assertEquals(300.0,maiorLanceCrescente, DELTA);
-    }
-
-    @Test
-    public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecresente(){
-        CONSOLE.propoe(new Lance(PAULO,300.0));
-        CONSOLE.propoe(new Lance(PAULO,200.0));
-        CONSOLE.propoe(new Lance(new Usuario("Fran"),100.0));
-
-        double maiorLanceDecrescente = CONSOLE.getMaiorLance();
-
-        assertEquals(300.0,maiorLanceDecrescente, DELTA);
     }
 
     @Test
@@ -75,24 +63,11 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolveMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecresente(){
-        CONSOLE.propoe(new Lance(new Usuario("Fran"),300.0));
-        CONSOLE.propoe(new Lance(PAULO,200.0));
-        CONSOLE.propoe(new Lance(PAULO,100.0));
-
-
-        double menorLanceDecresente = CONSOLE.getMenorLance();
-
-        assertEquals(100.0,menorLanceDecresente, DELTA);
-    }
-
-    @Test
     public void deve_DevolveTresMaioresLances_QuandoRecebeExatosTresLances(){
-        CONSOLE.propoe(new Lance(PAULO,200.0));
-        CONSOLE.propoe(new Lance(new Usuario("Fran"),300.0));
-        CONSOLE.propoe(new Lance(PAULO,400.0));
-        CONSOLE.propoe(new Lance(PAULO,500.0));
-        CONSOLE.propoe(new Lance(new Usuario("Fran"),200.0));
+        CONSOLE.propoe(new Lance(PAULO,300.0));
+        CONSOLE.propoe(new Lance(new Usuario("Fran"),400.0));
+        CONSOLE.propoe(new Lance(new Usuario("Alex"),500.0));
+
 
         List<Lance> tresMaioresLances = CONSOLE.tresMaioresLances();
 
@@ -101,6 +76,64 @@ public class LeilaoTest {
         assertEquals(300.0,tresMaioresLances.get(2).getValor(), DELTA);
 
         assertEquals(3,tresMaioresLances.size());
+    }
 
+    @Test
+    public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoTiverLances(){
+        double maiorLance = CONSOLE.getMaiorLance();
+        assertEquals(0.0,maiorLance,DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMenorLance_QuandoNaoTiverLances(){
+        double menorLance = CONSOLE.getMenorLance();
+        assertEquals(0.0,menorLance,DELTA);
+    }
+
+    @Test
+    public void deve_LancarException_QuandoForMenorQueOMaiorLance(){
+        CONSOLE.propoe(new Lance(PAULO,500));
+        try {
+            CONSOLE.propoe(new Lance(new Usuario("Fran"),400));
+            fail("Era esperado um RuntimeException");
+        }catch (RuntimeException e){
+            assertEquals("lance for menor que o ultimo lance",e.getMessage());
+        }
+
+
+    }
+
+    @Test
+    public void deve_LancarException_QuandoForOMesmoDoUltimoLance(){
+        CONSOLE.propoe(new Lance(PAULO,500));
+        try {
+            CONSOLE.propoe(new Lance(new Usuario("Paulo"),600));
+            fail("Era esperado um RuntimeException");
+        }catch (RuntimeException e){
+            assertEquals("Mesmo usuario do ultimo lance",e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void deve_LancarException_QuandoUsuarioDerCincoLances(){
+        final Usuario FRAN = new Usuario("Fran");
+
+        CONSOLE.propoe(new Lance(PAULO,100.0));
+        CONSOLE.propoe(new Lance(FRAN,200.0));
+        CONSOLE.propoe(new Lance(PAULO,300.0));
+        CONSOLE.propoe(new Lance(FRAN,400.0));
+        CONSOLE.propoe(new Lance(PAULO,500.0));
+        CONSOLE.propoe(new Lance(FRAN,600.0));
+        CONSOLE.propoe(new Lance(PAULO,700.0));
+        CONSOLE.propoe(new Lance(FRAN,800.0));
+        CONSOLE.propoe(new Lance(PAULO,900.0));
+        CONSOLE.propoe(new Lance(FRAN,1000.0));
+        try{
+            CONSOLE.propoe(new Lance(PAULO,1100.0));
+            fail("Era esperado um RuntimeException");
+        }catch (Exception e){
+            assertEquals("Usuario já possui cinco lances",e.getMessage());
+        }
     }
 }
