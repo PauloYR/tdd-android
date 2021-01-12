@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
+import br.com.alura.leilao.exception.LanceMenorQueUltimoLanceException;
+import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
+import br.com.alura.leilao.exception.UsuarioJaDeuCincoLancesException;
 
 public class Leilao implements Serializable {
 
@@ -19,7 +22,7 @@ public class Leilao implements Serializable {
     }
 
     public void propoe(Lance lance) {
-        if (lanceNaoValido(lance)) return;
+        validaLance(lance);
 
         lances.add(lance);
 
@@ -29,7 +32,6 @@ public class Leilao implements Serializable {
         Collections.sort(lances);
 
         calcularMaiorLance(valorLance);
-        calcularMenorLance(valorLance);
     }
 
     private boolean defineMaiorEMenorLanceParaOPrimeiroLance(double valorLance) {
@@ -40,16 +42,15 @@ public class Leilao implements Serializable {
         return false;
     }
 
-    private boolean lanceNaoValido(Lance lance) {
+    private void validaLance(Lance lance) {
         if (lanceForMenorQueOUltimoLance(lance))
-            throw new RuntimeException("lance for menor que o ultimo lance");
+            throw new LanceMenorQueUltimoLanceException("lance for menor que o ultimo lance");
         if (temLances()) {
             Usuario usuarioNovo = lance.getUsuario();
             if (usuarioForOMesmoDoUltimoLance(usuarioNovo))
-                throw new RuntimeException("Mesmo usuario do ultimo lance");
-            if (usuarioDeuCincoLances(usuarioNovo)) throw new RuntimeException("Usuario já possui cinco lances");
+                throw new LanceSeguidoDoMesmoUsuarioException();
+            if (usuarioDeuCincoLances(usuarioNovo)) throw new UsuarioJaDeuCincoLancesException();
         }
-        return false;
     }
 
     private boolean temLances() {
@@ -82,12 +83,6 @@ public class Leilao implements Serializable {
             return true;
         }
         return false;
-    }
-
-    private void calcularMenorLance(double valorLance) {
-        if (valorLance < menorLance) {
-            menorLance = valorLance;
-        }
     }
 
     private void calcularMaiorLance(double valorLance) {
