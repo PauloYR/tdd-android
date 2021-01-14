@@ -97,4 +97,7 @@ public class ListaLeilaoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public ListaLeilaoAdapter getAdapter() {
+        return adapter;
+    }
 }
