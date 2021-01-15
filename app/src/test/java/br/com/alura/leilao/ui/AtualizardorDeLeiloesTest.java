@@ -1,7 +1,5 @@
 package br.com.alura.leilao.ui;
 
-import android.content.Context;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -31,9 +29,6 @@ public class AtualizardorDeLeiloesTest {
 
     @Mock
     private LeilaoWebClient client;
-
-    @Mock
-    private Context context;
 
     @Mock
     private AtualizardorDeLeiloes.ErroCarregaLeiloesListener listener;
