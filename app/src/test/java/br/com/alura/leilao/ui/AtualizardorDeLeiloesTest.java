@@ -1,4 +1,6 @@
-package br.com.alura.leilao.ui.activity;
+package br.com.alura.leilao.ui;
+
+import android.content.Context;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,16 +23,20 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListaLeilaoActivityTest {
+public class AtualizardorDeLeiloesTest {
+
     @Mock
     private ListaLeilaoAdapter adapter;
 
     @Mock
     private LeilaoWebClient client;
 
+    @Mock
+    private Context context;
+
     @Test
     public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiloesDaApi() {
-        ListaLeilaoActivity activity = new ListaLeilaoActivity();
+        AtualizardorDeLeiloes atualizardor= new AtualizardorDeLeiloes();
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -44,7 +50,7 @@ public class ListaLeilaoActivityTest {
             }
         }).when(client).todos(any(RespostaListener.class));
 
-        activity.buscaLeiloes(adapter, client);
+        atualizardor.buscaLeiloes(adapter, client,context);
 
         verify(client).todos(any(RespostaListener.class));
 
@@ -54,5 +60,6 @@ public class ListaLeilaoActivityTest {
                 new Leilao("Monaliza")
         )));
     }
+
 
 }
