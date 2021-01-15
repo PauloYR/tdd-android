@@ -19,6 +19,7 @@ import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
@@ -34,9 +35,12 @@ public class AtualizardorDeLeiloesTest {
     @Mock
     private Context context;
 
+    @Mock
+    private AtualizardorDeLeiloes.ErroCarregaLeiloesListener listener;
+
     @Test
     public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiloesDaApi() {
-        AtualizardorDeLeiloes atualizardor= new AtualizardorDeLeiloes();
+        AtualizardorDeLeiloes atualizardor = new AtualizardorDeLeiloes();
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -50,7 +54,7 @@ public class AtualizardorDeLeiloesTest {
             }
         }).when(client).todos(any(RespostaListener.class));
 
-        atualizardor.buscaLeiloes(adapter, client,context);
+        atualizardor.buscaLeiloes(adapter, client,listener);
 
         verify(client).todos(any(RespostaListener.class));
 
@@ -61,5 +65,23 @@ public class AtualizardorDeLeiloesTest {
         )));
     }
 
+    @Test
+    public void deve_ApresentarMensagemDeFalha_QuandoFalharABuscaDeLeiloes() {
+        AtualizardorDeLeiloes atualizardor = new AtualizardorDeLeiloes();
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                RespostaListener<List<Leilao>> argument = invocation.getArgument(0);
+                argument.falha(anyString());
+                return null;
+            }
+        }).when(client).todos(any(RespostaListener.class));
+
+        atualizardor.buscaLeiloes(adapter, client, listener);
+
+        verify(listener).erroAoCarregar(anyString());
+
+    }
 
 }
